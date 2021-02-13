@@ -6,7 +6,12 @@
         {
             "label": "Build bot",
             "type": "shell",
-            "command": "go build -o build/lulubot cmd/bot/main.go"
+            "command": "go build -o build/lulubot cmd/bot/main.go",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         }
     ]
 }

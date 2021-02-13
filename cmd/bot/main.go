@@ -9,6 +9,7 @@ import (
 	"github.com/gempir/go-twitch-irc/v2"
 )
 
+// Config the bot config file
 type Config struct {
 	Username string
 	Oauth    string
