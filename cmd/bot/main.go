@@ -21,7 +21,7 @@ var client *twitch.Client
 
 func main() {
 
-	dat, err := ioutil.ReadFile("./config.yml")
+	dat, err := ioutil.ReadFile("./configs/config.yml")
 	check(err)
 	fmt.Print(string(dat))
 
