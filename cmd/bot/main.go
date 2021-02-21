@@ -71,12 +71,6 @@ func commandsHandler(message twitch.PrivateMessage) {
 	}
 
 	if strings.HasPrefix(message.Message, "!nolulu") {
-		if message.User.DisplayName == "Philderbeast" {
-			fmt.Println("Enabling bot msg from " + message.User.DisplayName)
-			enableBan(message.Message)
-			client.Say(message.Channel, "Bot enabled")
-		}
-
 		if _, ok := message.User.Badges["moderator"]; ok {
 			fmt.Println("Enabling bot msg from " + message.User.DisplayName)
 			enableBan(message.Message)
