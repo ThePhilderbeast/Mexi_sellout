@@ -57,12 +57,10 @@ func commandsHandler(message twitch.PrivateMessage) {
 
 	if message.User.DisplayName == "LukeAdrian29" {
 		if time.Now().Before(enabledUntil) {
-			if rand.Float32() <= 0.75 {
+			if rand.Float32() <= 0.50 {
 				client.Say(message.Channel, "/timeout LukeAdrian29 1")
 				config.LukeBans++
-			} else {
-				fmt.Println("he lives")
-			}
+
 		}
 	}
 
