@@ -43,7 +43,6 @@ func main() {
 	client.Join("mexi")
 
 	err = client.Connect()
-	client.Say("mexi", "The Bot is live")
 	check(err)
 
 }
@@ -56,12 +55,14 @@ func check(e error) {
 
 func commandsHandler(message twitch.PrivateMessage) {
 
-	if message.User.DisplayName == "LukeAdrian29" && time.Now().Before(enabledUntil) {
-		if rand.Float32() <= 0.75 {
-			client.Say(message.Channel, "/timeout LukeAdrian29 1")
-			config.LukeBans++
-		} else {
-			fmt.Println("he lives")
+	if message.User.DisplayName == "LukeAdrian29" {
+		if time.Now().Before(enabledUntil) {
+			if rand.Float32() <= 0.75 {
+				client.Say(message.Channel, "/timeout LukeAdrian29 1")
+				config.LukeBans++
+			} else {
+				fmt.Println("he lives")
+			}
 		}
 	}
 
@@ -72,6 +73,12 @@ func commandsHandler(message twitch.PrivateMessage) {
 	}
 
 	if strings.HasPrefix(message.Message, "!nolulu") {
+		if message.User.DisplayName == "Philderbeast" {
+			fmt.Println("Enabling bot msg from " + message.User.DisplayName)
+			enableBan(message.Message)
+			client.Say(message.Channel, "Bot enabled")
+		}
+
 		if _, ok := message.User.Badges["moderator"]; ok {
 			fmt.Println("Enabling bot msg from " + message.User.DisplayName)
 			enableBan(message.Message)
@@ -93,6 +100,6 @@ func enableBan(message string) {
 		minutes, err := strconv.Atoi(arg[1])
 		check(err)
 		enabledUntil = time.Now()
-		enabledUntil.Add(time.Minute * time.Duration(minutes))
+		enabledUntil = enabledUntil.Add(time.Minute * time.Duration(minutes))
 	}
 }
