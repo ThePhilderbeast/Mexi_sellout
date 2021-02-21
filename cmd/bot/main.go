@@ -60,7 +60,7 @@ func commandsHandler(message twitch.PrivateMessage) {
 			if rand.Float32() <= 0.50 {
 				client.Say(message.Channel, "/timeout LukeAdrian29 1")
 				config.LukeBans++
-
+			}
 		}
 	}
 
