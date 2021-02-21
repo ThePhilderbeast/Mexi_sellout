@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"math/rand"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gempir/go-twitch-irc/v2"
+	"gopkg.in/yaml.v2"
 )
 
 // Config the bot config file
@@ -16,15 +19,16 @@ type Config struct {
 	LukeBans int
 }
 
-var bansEnabled = false
 var config = Config{}
 var client *twitch.Client
+var enabledUntil = time.Now()
 
 func main() {
 
 	dat, err := ioutil.ReadFile("./configs/config.yml")
 	check(err)
-	fmt.Print(string(dat))
+	yaml.Unmarshal(dat, &config)
+	fmt.Println(config)
 
 	client = twitch.NewClient(config.Username, "oauth:"+config.Oauth)
 
@@ -50,7 +54,8 @@ func check(e error) {
 }
 
 func commandsHandler(message twitch.PrivateMessage) {
-	if message.User.DisplayName == "LukeAdrian29" && bansEnabled {
+
+	if message.User.DisplayName == "LukeAdrian29" && time.Now().Before(enabledUntil) {
 		if rand.Float32() <= 0.75 {
 			client.Say(message.Channel, "/timeout LukeAdrian29 1")
 			config.LukeBans++
@@ -59,15 +64,23 @@ func commandsHandler(message twitch.PrivateMessage) {
 		}
 	}
 
-	if strings.HasPrefix(message.Message, "!nolulu") && bansEnabled {
-		client.Say(message.Channel, "No Lulu!")
-		client.Say(message.Channel, "/timeout LukeAdrian29 1")
-		config.LukeBans++
-	}
-
 	if strings.HasPrefix(message.Message, "!lulubans") {
 		msg := fmt.Sprintf("lulu has been banned %d times", config.LukeBans)
 		fmt.Println(message.Channel + ": " + msg)
 		client.Say(message.Channel, msg)
+	}
+
+	if strings.HasPrefix(message.Message, "!nolulu") {
+		if _, ok := message.User.Badges["moderator"]; ok {
+			fmt.Println("Enabling bot msg from " + message.User.DisplayName)
+
+			arg := strings.Split(message.Message, " ")
+			if len(arg) >= 2 {
+				minutes, err := strconv.Atoi(arg[1])
+				check(err)
+				enabledUntil = time.Now()
+				enabledUntil.Add(time.Minute * time.Duration(minutes))
+			}
+		}
 	}
 }
