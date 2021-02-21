@@ -43,6 +43,7 @@ func main() {
 	client.Join("mexi")
 
 	err = client.Connect()
+	client.Say("mexi", "The Bot is live")
 	check(err)
 
 }
@@ -73,14 +74,25 @@ func commandsHandler(message twitch.PrivateMessage) {
 	if strings.HasPrefix(message.Message, "!nolulu") {
 		if _, ok := message.User.Badges["moderator"]; ok {
 			fmt.Println("Enabling bot msg from " + message.User.DisplayName)
-
-			arg := strings.Split(message.Message, " ")
-			if len(arg) >= 2 {
-				minutes, err := strconv.Atoi(arg[1])
-				check(err)
-				enabledUntil = time.Now()
-				enabledUntil.Add(time.Minute * time.Duration(minutes))
-			}
+			enableBan(message.Message)
+			client.Say(message.Channel, "Bot enabled")
 		}
+
+		if _, ok := message.User.Badges["broadcaster"]; ok {
+			fmt.Println("Enabling bot msg from " + message.User.DisplayName)
+			enableBan(message.Message)
+			client.Say(message.Channel, "Bot enabled")
+		}
+	}
+}
+
+func enableBan(message string) {
+
+	arg := strings.Split(message, " ")
+	if len(arg) >= 2 {
+		minutes, err := strconv.Atoi(arg[1])
+		check(err)
+		enabledUntil = time.Now()
+		enabledUntil.Add(time.Minute * time.Duration(minutes))
 	}
 }
