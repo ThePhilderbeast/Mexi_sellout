@@ -16,12 +16,18 @@ import (
 type Config struct {
 	Username string
 	Oauth    string
-	LukeBans int
+}
+
+type victim struct {
+	Username     string
+	EnabledUntil time.Time
+	EnabledCount int
+	TimeoutCount int
 }
 
 var config = Config{}
 var client *twitch.Client
-var enabledUntil = time.Now()
+var victims []victim
 
 func main() {
 
@@ -55,22 +61,18 @@ func check(e error) {
 
 func commandsHandler(message twitch.PrivateMessage) {
 
-	if message.User.DisplayName == "LukeAdrian29" {
-		if time.Now().Before(enabledUntil) {
-			if rand.Float32() <= 0.50 {
-				client.Say(message.Channel, "/timeout LukeAdrian29 1")
-				config.LukeBans++
+	for _, v := range victims {
+		if v.Username == strings.ToLower(message.User.DisplayName) {
+			if time.Now().Before(v.EnabledUntil) {
+				if rand.Float32() <= 0.50 {
+					client.Say(message.Channel, "/timeout message.User.DisplayName 1")
+					v.TimeoutCount++
+				}
 			}
 		}
 	}
 
-	if strings.HasPrefix(message.Message, "!lulubans") {
-		msg := fmt.Sprintf("lulu has been banned %d times", config.LukeBans)
-		fmt.Println(message.Channel + ": " + msg)
-		client.Say(message.Channel, msg)
-	}
-
-	if strings.HasPrefix(message.Message, "!nolulu") {
+	if strings.HasPrefix(message.Message, "!nomore") {
 		if _, ok := message.User.Badges["moderator"]; ok {
 			fmt.Println("Enabling bot msg from " + message.User.DisplayName)
 			enableBan(message.Message)
@@ -88,10 +90,30 @@ func commandsHandler(message twitch.PrivateMessage) {
 func enableBan(message string) {
 
 	arg := strings.Split(message, " ")
+	victimName := "lukeadrian29"
 	if len(arg) >= 2 {
+		if len(arg) == 3 {
+			victimName = strings.ToLower(arg[2])
+		}
+
+		vic := victim{
+			Username:     strings.ToLower(victimName),
+			EnabledUntil: time.Now(),
+			EnabledCount: 0,
+			TimeoutCount: 0,
+		}
+
+		for _, v := range victims {
+			if v.Username == victimName {
+				vic = v
+				break
+			}
+		}
+
 		minutes, err := strconv.Atoi(arg[1])
 		check(err)
-		enabledUntil = time.Now()
-		enabledUntil = enabledUntil.Add(time.Minute * time.Duration(minutes))
+		vic.EnabledUntil = time.Now()
+		vic.EnabledUntil = vic.EnabledUntil.Add(time.Minute * time.Duration(minutes))
+		vic.EnabledCount++
 	}
 }
