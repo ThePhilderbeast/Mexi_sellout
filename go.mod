@@ -1,4 +1,4 @@
-module github.com/thePhilderbeast/tarkov
+module github.com/thePhilderbeast/twitch_booli
 
 go 1.13
 
