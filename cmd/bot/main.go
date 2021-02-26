@@ -65,7 +65,8 @@ func commandsHandler(message twitch.PrivateMessage) {
 		if v.Username == strings.ToLower(message.User.DisplayName) {
 			if time.Now().Before(v.EnabledUntil) {
 				if rand.Float32() <= 0.50 {
-					client.Say(message.Channel, "/timeout message.User.DisplayName 1")
+					timeoutmsg := fmt.Sprintf("/timeout %s 1", message.User.DisplayName)
+					client.Say(message.Channel, timeoutmsg)
 					v.TimeoutCount++
 				}
 			}
@@ -73,21 +74,25 @@ func commandsHandler(message twitch.PrivateMessage) {
 	}
 
 	if strings.HasPrefix(message.Message, "!nomore") {
+
+		if message.User.DisplayName == "Philderbeast" {
+			fmt.Println("Enabling bot msg from " + message.User.DisplayName)
+			enableBan(message.Message, message.Channel)
+		}
+
 		if _, ok := message.User.Badges["moderator"]; ok {
 			fmt.Println("Enabling bot msg from " + message.User.DisplayName)
-			enableBan(message.Message)
-			client.Say(message.Channel, "Bot enabled")
+			enableBan(message.Message, message.Channel)
 		}
 
 		if _, ok := message.User.Badges["broadcaster"]; ok {
 			fmt.Println("Enabling bot msg from " + message.User.DisplayName)
-			enableBan(message.Message)
-			client.Say(message.Channel, "Bot enabled")
+			enableBan(message.Message, message.Channel)
 		}
 	}
 }
 
-func enableBan(message string) {
+func enableBan(message string, channel string) {
 
 	arg := strings.Split(message, " ")
 	victimName := "lukeadrian29"
@@ -103,9 +108,12 @@ func enableBan(message string) {
 			TimeoutCount: 0,
 		}
 
-		for _, v := range victims {
+		index := -1
+
+		for i, v := range victims {
 			if v.Username == victimName {
 				vic = v
+				index = i
 				break
 			}
 		}
@@ -115,5 +123,14 @@ func enableBan(message string) {
 		vic.EnabledUntil = time.Now()
 		vic.EnabledUntil = vic.EnabledUntil.Add(time.Minute * time.Duration(minutes))
 		vic.EnabledCount++
+
+		if index >= 0 {
+			victims[index] = vic
+		} else {
+			victims = append(victims, vic)
+		}
+
+		client.Say(channel, "Bot enabled for "+vic.Username)
+		fmt.Println("bot enabled")
 	}
 }
