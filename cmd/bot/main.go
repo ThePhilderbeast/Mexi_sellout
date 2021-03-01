@@ -66,10 +66,10 @@ func commandsHandler(message twitch.PrivateMessage) {
 
 	if strings.HasPrefix(message.Message, "!nomore") {
 
-		if message.User.DisplayName == "Philderbeast" {
-			fmt.Println("Enabling bot msg from " + message.User.DisplayName)
-			enableBan(message.Message, message.Channel)
-		}
+		// if message.User.DisplayName == "Philderbeast" {
+		// 	fmt.Println("Enabling bot msg from " + message.User.DisplayName)
+		// 	enableBan(message.Message, message.Channel)
+		// }
 
 		if _, ok := message.User.Badges["moderator"]; ok {
 			fmt.Println("Enabling bot msg from " + message.User.DisplayName)
