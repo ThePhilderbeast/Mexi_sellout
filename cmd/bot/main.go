@@ -34,18 +34,9 @@ func main() {
 	dat, err := ioutil.ReadFile("./configs/config.yml")
 	check(err)
 	yaml.Unmarshal(dat, &config)
-	fmt.Println(config)
 
 	client = twitch.NewClient(config.Username, "oauth:"+config.Oauth)
-
 	client.OnPrivateMessage(commandsHandler)
-	client.OnNoticeMessage(func(message twitch.NoticeMessage) {
-		fmt.Println(message.Message)
-	})
-
-	client.OnUserNoticeMessage(func(message twitch.UserNoticeMessage) {
-		fmt.Println(message.Message)
-	})
 	client.Join("mexi")
 
 	err = client.Connect()
