@@ -1,4 +1,4 @@
-module github.com/thePhilderbeast/twitch_booli
+module github.com/ThePhilderbeast/twitch_booli
 
 go 1.13
 

@@ -1,6 +1,6 @@
 config.yml
 
-build/*
+build/bin/*
 
 # Binaries for programs and plugins
 *.exe
