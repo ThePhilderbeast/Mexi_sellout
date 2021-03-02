@@ -109,10 +109,10 @@ func enableBan(message string, channel string) {
 			}
 		}
 
-		minutes, err := strconv.Atoi(arg[1])
+		seconds, err := strconv.Atoi(arg[1])
 		check(err)
 		vic.EnabledUntil = time.Now()
-		vic.EnabledUntil = vic.EnabledUntil.Add(time.Minute * time.Duration(minutes))
+		vic.EnabledUntil = vic.EnabledUntil.Add(time.Second * time.Duration(seconds))
 		vic.EnabledCount++
 
 		if index >= 0 {
