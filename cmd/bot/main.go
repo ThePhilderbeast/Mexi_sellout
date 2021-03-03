@@ -112,6 +112,7 @@ func enableBan(message string, channel string) {
 		seconds, err := strconv.Atoi(arg[1])
 		if err != nil {
 			client.Say(channel, "to enable the bot use !nomore <time in seconds> <user to timeout>")
+			return
 		}
 		vic.EnabledUntil = time.Now()
 		vic.EnabledUntil = vic.EnabledUntil.Add(time.Second * time.Duration(seconds))
