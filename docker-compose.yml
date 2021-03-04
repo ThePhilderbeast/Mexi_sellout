@@ -1,0 +1,6 @@
+version: "3.8"  # optional since v1.27.0
+services:
+  bot:
+    image: philderbeast/twitch_booli
+    volumes:
+      - ./config.yml:/twitch_booli/config/config/yml

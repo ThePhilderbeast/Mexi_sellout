@@ -1,6 +1,8 @@
 FROM golang:1.16
 
-RUN go get -u github.com/ThePhilderbeast/twitch_booli/cmd/bot
+ARG version
+
+RUN go get -u github.com/ThePhilderbeast/twitch_booli/cmd/bot@${DOCKER_TAG}
 
 ENV APP_HOME /twitch_booli
 

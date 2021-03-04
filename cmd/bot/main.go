@@ -16,6 +16,7 @@ import (
 type Config struct {
 	Username string
 	Oauth    string
+	Channel  string
 }
 
 type victim struct {
