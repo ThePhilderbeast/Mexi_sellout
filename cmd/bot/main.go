@@ -90,7 +90,7 @@ func enableBan(message string, channel string) {
 	victimName := "lukeadrian29"
 	if len(arg) >= 2 {
 		if len(arg) == 3 {
-			victimName = strings.ToLower(arg[1])
+			victimName = strings.ToLower(arg[2])
 		}
 
 		vic := victim{
@@ -110,9 +110,9 @@ func enableBan(message string, channel string) {
 			}
 		}
 
-		seconds, err := strconv.Atoi(arg[2])
+		seconds, err := strconv.Atoi(arg[1])
 		if err != nil {
-			client.Say(channel, "to enable the bot use !nomore <user to timeout> <time in seconds>")
+			client.Say(channel, "to enable the bot use !nomore <time in seconds> <user to timeout>")
 			return
 		}
 		vic.EnabledUntil = time.Now()
